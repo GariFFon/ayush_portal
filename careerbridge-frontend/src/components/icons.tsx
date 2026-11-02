@@ -1,0 +1,47 @@
+/**
+ * Single source of truth for icons: Solar (linear) by 480 Design.
+ * Thin, rounded outlines — import from here, never straight from the pack,
+ * so the whole app can be re-skinned in one place.
+ */
+export {
+  AddCircleIcon as PlusIcon,
+  AltArrowDownIcon as ChevronDownIcon,
+  AltArrowLeftIcon as ChevronLeftIcon,
+  AltArrowRightIcon as ChevronRightIcon,
+  AltArrowUpIcon as ChevronUpIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ArrowRightUpIcon,
+  BellIcon,
+  CalendarIcon,
+  BookIcon as SkillsIcon,
+  BuildingsIcon,
+  CaseIcon as InternshipsIcon,
+  ChartIcon,
+  CheckCircleIcon,
+  ClockCircleIcon as ClockIcon,
+  CupFirstIcon as TrophyIcon,
+  SquareAcademicCapIcon as GraduateIcon,
+  StarIcon,
+  CloseCircleIcon,
+  CommandIcon,
+  DiplomaIcon,
+  DocumentIcon as ApplicationsIcon,
+  GlobalIcon,
+  HomeIcon,
+  LogoutIcon,
+  MagnifierIcon as SearchIcon,
+  MonitorIcon,
+  MoonIcon,
+  PenIcon,
+  SettingsIcon,
+  SidebarMinimalisticIcon as SidebarIcon,
+  SunIcon,
+  TrashBinTrashIcon as TrashIcon,
+  UserRoundedIcon as ProfileIcon,
+  UsersGroupRoundedIcon as PeopleIcon,
+  WalletIcon,
+  WidgetIcon as OverviewIcon,
+} from "@solar-icons/react/linear"
+export { BookmarkIcon } from "@solar-icons/react/linear"
+export { BookmarkIcon as BookmarkSolidIcon } from "@solar-icons/react/bold"
