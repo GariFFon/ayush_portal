@@ -35,6 +35,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -64,17 +65,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ayush_portal.wsgi.application"
 
-# Database — use PostgreSQL in production, SQLite for development
-DATABASES = {
-    "default": {
-        "ENGINE": config("DB_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME": config("DB_NAME", default=str(BASE_DIR / "db.sqlite3")),
-        "USER": config("DB_USER", default=""),
-        "PASSWORD": config("DB_PASSWORD", default=""),
-        "HOST": config("DB_HOST", default=""),
-        "PORT": config("DB_PORT", default=""),
+# Database — use PostgreSQL in production (via DATABASE_URL or DB_* params), SQLite for development
+DATABASE_URL = config("DATABASE_URL", default=None)
+if DATABASE_URL:
+    try:
+        import dj_database_url
+        DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
+    except ImportError:
+        DATABASES = {
+            "default": {
+                "ENGINE": config("DB_ENGINE", default="django.db.backends.sqlite3"),
+                "NAME": config("DB_NAME", default=str(BASE_DIR / "db.sqlite3")),
+            }
+        }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": config("DB_ENGINE", default="django.db.backends.sqlite3"),
+            "NAME": config("DB_NAME", default=str(BASE_DIR / "db.sqlite3")),
+            "USER": config("DB_USER", default=""),
+            "PASSWORD": config("DB_PASSWORD", default=""),
+            "HOST": config("DB_HOST", default=""),
+            "PORT": config("DB_PORT", default=""),
+        }
     }
-}
 
 # Custom user model
 AUTH_USER_MODEL = "accounts.User"
@@ -124,10 +138,27 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-# CORS — allow Next.js frontend
+# Static files storage with WhiteNoise
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# CORS & CSRF — allow Next.js frontend (local and deployed)
+CORS_ALLOW_ALL_ORIGINS = config("CORS_ALLOW_ALL_ORIGINS", default=False, cast=bool)
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
     default="http://localhost:3000,http://127.0.0.1:3000",
     cast=Csv(),
 )
 CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    default="http://localhost:3000,http://127.0.0.1:3000",
+    cast=Csv(),
+)
