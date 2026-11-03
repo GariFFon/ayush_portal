@@ -103,10 +103,10 @@ export default function StudentApplicationsPage() {
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile index={2} tone="sage" icon={<ApplicationsIcon />} title="Total" value={total} caption="Applications sent" />
-        <StatTile index={3} tone="blue" icon={<ClockIcon />} title="In progress" value={count("active")} caption="Awaiting a decision" />
-        <StatTile index={4} tone="violet" icon={<TrophyIcon />} title="Selected" value={selected} caption="Offers received" />
-        <StatTile index={5} tone="mist" icon={<CloseCircleIcon />} title="Rejected" value={count("rejected")} caption="Not this time" />
+        <StatTile index={2} tone="blue" icon={<ApplicationsIcon />} title="Total" value={total} caption="Applications sent" />
+        <StatTile index={3} tone="amber" icon={<ClockIcon />} title="In progress" value={count("active")} caption="Awaiting a decision" />
+        <StatTile index={4} tone="mint" icon={<TrophyIcon />} title="Selected" value={selected} caption="Offers received" />
+        <StatTile index={5} tone="pink" icon={<CloseCircleIcon />} title="Rejected" value={count("rejected")} caption="Not this time" />
       </div>
 
       <Panel title="All applications" style={stagger(6)} contentClassName="space-y-5">
@@ -127,11 +127,11 @@ export default function StudentApplicationsPage() {
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="h-9 text-xs font-medium text-muted-foreground">Company</TableHead>
-                <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground sm:table-cell">Role</TableHead>
-                <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground lg:table-cell">Mode</TableHead>
-                <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground md:table-cell">Applied</TableHead>
-                <TableHead className="h-9 text-xs font-medium text-muted-foreground">Status</TableHead>
+                <TableHead>Company</TableHead>
+                <TableHead className="hidden sm:table-cell">Role</TableHead>
+                <TableHead className="hidden lg:table-cell">Mode</TableHead>
+                <TableHead className="hidden md:table-cell">Applied</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead className="w-12" />
               </TableRow>
             </TableHeader>

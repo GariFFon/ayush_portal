@@ -14,7 +14,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id", "username", "email", "first_name", "last_name",
-            "role", "phone", "password", "password2",
+            "role", "gender", "phone", "password", "password2",
         ]
 
     def validate(self, attrs):
@@ -33,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id", "username", "email", "first_name", "last_name",
-            "full_name", "role", "phone", "profile_photo",
+            "full_name", "role", "gender", "phone", "profile_photo",
             "is_active", "created_at",
         ]
         read_only_fields = ["id", "created_at"]
@@ -45,4 +45,9 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "phone", "profile_photo"]
+        fields = ["first_name", "last_name", "email", "gender", "phone", "profile_photo"]
+
+    def validate_profile_photo(self, value):
+        if value and value.size > 5 * 1024 * 1024:
+            raise serializers.ValidationError("Photo must be 5 MB or smaller.")
+        return value

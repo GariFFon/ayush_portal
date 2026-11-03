@@ -14,6 +14,7 @@ export {
   ArrowRightUpIcon,
   BellIcon,
   CalendarIcon,
+  CameraIcon,
   BookIcon as SkillsIcon,
   BuildingsIcon,
   CaseIcon as InternshipsIcon,

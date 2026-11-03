@@ -1,220 +1,259 @@
-import Link from "next/link";
+import Link from "next/link"
+import { cn } from "cn"
 
-import { cn } from "cn";
-import { SegBars, StatTile, TaskList } from "@/components/kit";
-import { Button } from "@/components/ui/button";
+import { BrandMark } from "@/components/brand-mark"
+import { LandingMotion } from "@/components/landing/landing-motion"
+import { LatestJobs } from "@/components/landing/latest-jobs"
+import { Roll, RollLink } from "@/components/landing/roll-link"
+import { RolesScroll } from "@/components/landing/roles-scroll"
+import { StickyNav } from "@/components/landing/sticky-nav"
+import { WarpGrid } from "@/components/landing/warp-grid"
 
-const roles = [
-  {
-    role: "Students",
-    tone: "tone-blue",
-    blurb: "Build a skill profile, find the right internship and follow every application.",
-    points: ["Skill profile and proficiency", "Browse and apply in one click", "Live application status", "Match score per internship"],
-    href: "/register?role=student",
-    cta: "Join as a student",
-  },
-  {
-    role: "Companies",
-    tone: "tone-violet",
-    blurb: "Post openings, review candidates and move people through your pipeline.",
-    points: ["Post and publish listings", "Browse candidate profiles", "Shortlist, select, reject", "Hiring pipeline analytics"],
-    href: "/register?role=company",
-    cta: "Join as a recruiter",
-  },
-  {
-    role: "Universities",
-    tone: "tone-mint",
-    blurb: "See how students are doing — skills, applications and placements at a glance.",
-    points: ["Placement outcomes", "Skill distribution", "Industry readiness", "Exportable reports"],
-    href: "/register?role=university",
-    cta: "Join as a university",
-  },
-];
+const COMPANIES = [
+  { name: "Zoho", logo: "zoho" },
+  { name: "Razorpay", logo: "razorpay" },
+  { name: "Postman", logo: "postman" },
+  { name: "Swiggy", logo: "swiggy" },
+  { name: "Infosys", logo: "infosys" },
+  { name: "Paytm", logo: "paytm" },
+  { name: "Atlassian", logo: "atlassian" },
+  { name: "Zomato", logo: "zomato" },
+  { name: "TCS", logo: "tcs" },
+  { name: "Figma", logo: "figma" },
+  { name: "Wipro", logo: "wipro" },
+  { name: "Notion", logo: "notion" },
+  { name: "Stripe", logo: "stripe" },
+  { name: "Google", logo: "google" },
+]
 
-const features = [
-  { title: "Smart skill matching", text: "A transparent, rule-based match between your skills and what each internship needs — with the gaps spelled out." },
-  { title: "Placement analytics", text: "Dashboards for every role: application trends, skill distribution and placement outcomes." },
-  { title: "Role-based workspaces", text: "Students, recruiters and universities each get their own dashboard and permissions." },
-  { title: "One-click applications", text: "Apply fast and follow every status change from a single, calm dashboard." },
-  { title: "Verified companies", text: "Companies are verified before they post, so every opportunity is worth your time." },
-  { title: "Rich listings", text: "Filter by skill, location, work mode, stipend and deadline to find the right fit." },
-];
+const STATEMENT: { w: string; em?: boolean }[] = (
+  "CareerBridge is where *students,* *universities* and *companies* finally meet. Skills are matched in the open, every application is tracked to its last step, and placements are *measured,* not guessed."
+)
+  .split(" ")
+  .map((w) => (w.startsWith("*") ? { w: w.replace(/\*/g, ""), em: true } : { w }))
 
-const FACTS = [
-  { k: "3", v: "role-based dashboards" },
-  { k: "100%", v: "rule-based, explainable matching" },
-  { k: "Live", v: "application tracking" },
-  { k: "SIH26044", v: "built for the problem statement" },
-];
+const FEATURES = [
+  { title: "Explainable matching", text: "A transparent score between your skills and what each internship needs — with the gaps spelled out." },
+  { title: "Resume that reads itself", text: "Upload a PDF and we pull out the skills we recognise. You decide what to add." },
+  { title: "Placement analytics", text: "Dashboards for every role: trends, skill distribution and outcomes." },
+  { title: "Role-based workspaces", text: "Students, recruiters and universities each get their own calm dashboard." },
+  { title: "Verified companies", text: "Recruiters are verified before they post, so every opportunity is worth your time." },
+  { title: "Credentials that count", text: "Certificates, experience and achievements on one profile, with the proof attached." },
+]
+
+const STATS = [
+  { n: 3, suffix: "", label: "role-based dashboards" },
+  { n: 100, suffix: "%", label: "explainable matching" },
+  { n: 90, suffix: "+", label: "skills recognised in a resume" },
+  { n: 476, suffix: "", label: "universities ready to pick" },
+]
 
 export default function HomePage() {
   return (
-    <div className="min-h-svh bg-background">
-      {/* ── Nav ── */}
-      <header className="glass-bar sticky top-0 z-50">
-        <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-5 sm:px-8">
-          <Link href="/" className="flex items-center gap-2.5 transition-transform duration-150 active:scale-[0.97]">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-[15px] font-bold text-primary-foreground">C</span>
-            <span className="text-[16px] font-medium tracking-tight">CareerBridge</span>
+    <div className="min-h-svh overflow-x-clip bg-background">
+      <LandingMotion />
+      <StickyNav />
+
+      {/* ───────────────────────── Hero: one dark-to-glow gradient, hairline arcs, a centred line ───────────────────────── */}
+      <section className="relative isolate flex min-h-svh flex-col items-center overflow-hidden bg-[linear-gradient(180deg,oklch(0.1_0.02_280)_0%,oklch(0.16_0.06_280)_38%,oklch(0.34_0.14_283)_72%,oklch(0.56_0.15_290)_100%)] text-white [border-radius:0_0_50%_50%/0_0_3.5rem_3.5rem]">
+        {/* hairline arcs */}
+        <svg aria-hidden data-parallax="0.08" className="pointer-events-none absolute inset-0 -z-10 size-full text-white" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" strokeOpacity="0.16" strokeWidth="1">
+          <ellipse cx="800" cy="60" rx="1100" ry="150" />
+          <ellipse cx="800" cy="470" rx="470" ry="640" />
+          <ellipse cx="800" cy="470" rx="900" ry="440" />
+          <path d="M0 150C300 520 520 760 800 900M1600 150C1300 520 1080 760 800 900" />
+          <path d="M0 450h1600" strokeOpacity="0.08" />
+        </svg>
+
+        {/* the glow: a soft ring of light behind the words */}
+        <div aria-hidden data-parallax="0.15" className="pointer-events-none absolute top-1/2 left-1/2 -z-10 -translate-x-1/2 -translate-y-[46%]">
+          <div data-intro="tile" className="relative size-[min(78vw,34rem)]">
+            <div className="halo-turn absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,oklch(0.7_0.17_300),oklch(0.78_0.12_20),oklch(0.85_0.1_75),oklch(0.62_0.18_270),oklch(0.7_0.17_300))] opacity-80 blur-[34px] [mask-image:radial-gradient(closest-side,transparent_52%,#000_74%,transparent_100%)]" />
+            <div className="absolute inset-[18%] rounded-full bg-[oklch(0.45_0.18_285/0.18)] blur-3xl" />
+          </div>
+        </div>
+
+        {/* top bar: logo in the middle, three quiet links */}
+        <div className="relative z-10 mt-9 flex flex-col items-center">
+          <Link href="/" aria-label="CareerBridge home" data-intro="fade" className="rounded-3xl transition-transform duration-300 hover:scale-105">
+            <BrandMark className="size-16" />
           </Link>
-          <nav className="hidden items-center gap-1 rounded-full bg-foreground/[0.05] p-1 md:flex">
-            {[["Internships", "/internships"], ["Roles", "#roles"], ["Features", "#features"]].map(([l, h]) => (
-              <Link key={l} href={h} className="rounded-full px-4 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-card hover:text-foreground">
-                {l}
-              </Link>
-            ))}
+          <nav aria-label="Primary" className="font-display mt-6 grid w-[min(92vw,76rem)] grid-cols-3 items-center text-[clamp(1.05rem,1.6vw,1.4rem)]">
+            <Link href="/login" data-intro="fade" className="justify-self-start italic text-white/85 transition-colors hover:text-white">
+              <Roll>Sign in</Roll>
+            </Link>
+            <a href="#internships" data-intro="fade" className="justify-self-center text-white/85 transition-colors hover:text-white">
+              <Roll>Internships</Roll>
+            </a>
+            <Link href="/register" data-intro="fade" className="justify-self-end text-white/85 transition-colors hover:text-white">
+              <Roll>Sign up</Roll>
+            </Link>
           </nav>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" render={<Link href="/login" />} nativeButton={false}>
-              Log in
-            </Button>
-            <Button render={<Link href="/register" />} nativeButton={false}>
-              Get started
-            </Button>
-          </div>
         </div>
-      </header>
 
-      <main>
-        {/* ── Hero ── */}
-        <section className="mx-auto max-w-[1200px] px-5 pt-20 pb-12 text-center sm:px-8 sm:pt-28">
-          <span className="rise inline-flex items-center rounded-full border border-(--hairline) bg-card/70 px-4 py-1.5 text-[13px] font-medium text-muted-foreground backdrop-blur-md">
-            Academia–industry collaboration · SIH26044
-          </span>
-          <h1 className="rise mx-auto mt-7 max-w-4xl text-[clamp(2.5rem,6.2vw,4.75rem)] font-medium" style={{ "--i": 1 } as React.CSSProperties}>
-            Where students, companies and universities meet.
+        {/* centre: the line */}
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pt-4 pb-24 text-center">
+          <h1 className="font-display text-[clamp(3.6rem,10.5vw,9.5rem)] leading-[0.92] tracking-[-0.02em] uppercase italic">
+            <span data-intro="line" className="mask-line pr-[0.18em] -mr-[0.18em]">
+              <span>Find your</span>
+            </span>
+            <span data-intro="line" className="mask-line pr-[0.18em] -mr-[0.18em]">
+              <span>first step</span>
+            </span>
           </h1>
-          <p className="rise mx-auto mt-6 max-w-2xl text-[18px] leading-relaxed text-muted-foreground" style={{ "--i": 2 } as React.CSSProperties}>
-            Map your skills, discover internships and track every application — with dashboards built for each side of the table.
+          <p data-intro="fade" className="font-display mt-9 max-w-2xl text-[clamp(0.95rem,1.35vw,1.2rem)] tracking-[0.04em] uppercase text-white/85">
+            The internship &amp; placement portal for students, universities and companies.
           </p>
-          <div className="rise mt-9 flex flex-wrap items-center justify-center gap-3" style={{ "--i": 3 } as React.CSSProperties}>
-            <Button size="lg" render={<Link href="/register" />} nativeButton={false}>
-              Get started free
-            </Button>
-            <Button size="lg" variant="outline" render={<Link href="/internships" />} nativeButton={false}>
-              Browse internships
-            </Button>
-          </div>
-        </section>
-
-        {/* ── Product preview ── */}
-        <section className="mx-auto max-w-[1200px] px-5 pb-24 sm:px-8">
-          <div className="rise scene overflow-hidden rounded-[34px] border border-(--hairline) p-5 sm:p-8" style={{ "--i": 4 } as React.CSSProperties}>
-            <div className="grid gap-5 sm:grid-cols-3">
-              <StatTile tone="blue" title="Applications" value={14} pill={{ text: "5 new", variant: "info" }} caption="Across all internships" />
-              <StatTile tone="violet" title="Shortlisted" value={4} pill={{ text: "In play", variant: "violet" }} caption="Recruiters are interested" />
-              <StatTile tone="mint" title="Selected" value={2} pill={{ text: "Congrats", variant: "success" }} caption="Offers received" />
-            </div>
-            <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
-              <div className="frost rounded-[26px] p-6">
-                <p className="text-[15px] font-semibold">Application pipeline</p>
-                <SegBars className="mt-5" data={[
-                    { label: "Applied", value: 5 },
-                    { label: "In review", value: 2 },
-                    { label: "Shortlisted", value: 4 },
-                    { label: "Selected", value: 2 },
-                    { label: "Rejected", value: 1 },
-                  ]} />
-              </div>
-              <div className="frost rounded-[26px] p-6">
-                <p className="mb-3 text-[15px] font-semibold">Next steps</p>
-                <TaskList
-                  highlight={0}
-                  items={[
-                    { title: "Complete your profile", description: "75% complete", progress: 0.75, href: "/register" },
-                    { title: "Add your skills", description: "6 skills added", progress: 1, href: "/register" },
-                    { title: "Apply to internships", description: "14 applications sent", progress: 1, href: "/register" },
-                  ]}
-                />
-              </div>
-            </div>
-          </div>
-          <p className="mt-4 text-center text-xs text-muted-foreground">Preview with sample data</p>
-        </section>
-
-        {/* ── Facts ── */}
-        <section className="mx-auto max-w-[1200px] px-5 pb-24 sm:px-8">
-          <div className="grid grid-cols-2 gap-6 border-y border-border py-10 md:grid-cols-4">
-            {FACTS.map((f) => (
-              <div key={f.v} className="text-center">
-                <p className="text-[2rem] font-medium tracking-tight">{f.k}</p>
-                <p className="mt-1 text-[13px] text-muted-foreground">{f.v}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Roles ── */}
-        <section id="roles" className="mx-auto max-w-[1200px] scroll-mt-24 px-5 pb-24 sm:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="text-[clamp(1.9rem,4vw,2.75rem)] font-medium">Built for every stakeholder</h2>
-            <p className="mt-3 text-[17px] text-muted-foreground">Three tailored experiences, one platform.</p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {roles.map((r) => (
-              <div key={r.role} className={cn(r.tone, "tint glass-card flex flex-col rounded-[28px] p-8 [--r:28px]")}>
-                <h3 className="text-[1.375rem] font-bold text-(--t-fg)">{r.role}</h3>
-                <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">{r.blurb}</p>
-                <ul className="mt-6 space-y-2.5 text-[14px]">
-                  {r.points.map((p) => (
-                    <li key={p} className="flex items-start gap-2.5">
-                      <span className="mt-[7px] size-1.5 shrink-0 rounded-full bg-(--t-fg)" />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-                <Button className="mt-8 w-full" size="lg" render={<Link href={r.href} />} nativeButton={false}>
-                  {r.cta}
-                </Button>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Features ── */}
-        <section id="features" className="mx-auto max-w-[1200px] scroll-mt-24 px-5 pb-24 sm:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="text-[clamp(1.9rem,4vw,2.75rem)] font-medium">Everything you need</h2>
-            <p className="mt-3 text-[17px] text-muted-foreground">The complete placement lifecycle, in one place.</p>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((f, i) => (
-              <div key={f.title} className="glass-card lift rounded-[26px] p-7">
-                <span className="text-[13px] font-semibold text-primary tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="mt-3 text-[17px] font-semibold">{f.title}</h3>
-                <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">{f.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── CTA ── */}
-        <section className="mx-auto max-w-[1200px] px-5 pb-24 sm:px-8">
-          <div className="tone-violet tint glass-card rounded-[34px] px-8 py-16 text-center [--r:34px]">
-            <h2 className="mx-auto max-w-2xl text-[clamp(1.9rem,4vw,2.75rem)] font-medium">Ready to bridge the gap?</h2>
-            <p className="mx-auto mt-4 max-w-xl text-[17px] text-muted-foreground">
-              Create your account and see your first dashboard in under a minute.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Button size="lg" render={<Link href="/register" />} nativeButton={false}>
-                Create free account
-              </Button>
-              <Button size="lg" variant="outline" render={<Link href="/internships" />} nativeButton={false}>
-                View internships
-              </Button>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-3 px-5 py-8 text-[13px] text-muted-foreground sm:flex-row sm:px-8">
-          <p>
-            <span className="font-semibold text-foreground">CareerBridge</span> · SIH26044 · Ministry of Ayush
-          </p>
-          <p>© 2026 CareerBridge. Built with Django & Next.js.</p>
+          <Link
+            href="/internships"
+            data-intro="fade"
+            className="group/cta font-display relative mt-10 inline-flex h-14 items-center justify-center px-12 text-[1.15rem] tracking-[0.06em] uppercase outline-none"
+          >
+            <svg aria-hidden viewBox="0 0 320 56" preserveAspectRatio="none" className="absolute inset-0 size-full transition-transform duration-500 ease-(--ease-out) group-hover/cta:scale-[1.06]" fill="none" stroke="currentColor" strokeOpacity="0.7">
+              <ellipse cx="160" cy="28" rx="158" ry="26" />
+            </svg>
+            <span className="relative">
+              <Roll>Browse internships</Roll>
+            </span>
+          </Link>
         </div>
+
+        {/* bottom: a small caption, and the way down */}
+        <p className="font-display absolute bottom-16 left-10 hidden text-[0.8rem] tracking-[0.12em] uppercase text-white/60 sm:block">Students · Universities · Companies</p>
+        <a href="#internships" aria-label="Scroll down" className="group/scroll absolute bottom-7 left-1/2 z-10 flex size-12 -translate-x-1/2 items-center justify-center rounded-full border border-white/40 transition-[background-color,transform] duration-300 hover:scale-110 hover:bg-white/10">
+          <svg viewBox="0 0 24 24" className="size-5 transition-transform duration-300 group-hover/scroll:translate-y-0.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 5v14M6 13l6 6 6-6" />
+          </svg>
+        </a>
+      </section>
+
+      {/* ───────────────────────── Marquee: real logos ───────────────────────── */}
+      <section aria-label="Teams students apply to" className="marquee overflow-hidden pt-16 pb-6">
+        <p className="mb-9 text-center text-[13px] font-medium tracking-[0.2em] text-muted-foreground uppercase">Teams students apply to</p>
+        <div className="marquee-track flex items-center gap-24 whitespace-nowrap">
+          {[...COMPANIES, ...COMPANIES].map((c, i) => (
+            <span key={i} className="group/co flex cursor-default items-center gap-4 opacity-60 grayscale transition-[opacity,filter] duration-300 hover:opacity-100 hover:grayscale-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/logos/${c.logo}.svg`} alt="" width={44} height={44} className="h-11 w-11 object-contain transition-transform duration-300 group-hover/co:scale-110" draggable={false} />
+              <span className="text-[1.9rem] font-medium tracking-[-0.03em]">{c.name}</span>
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* ───────────────────────── Statement ───────────────────────── */}
+      <section data-curtain data-read-scope className="relative z-0 h-[280svh]">
+      <div className="sticky top-0 isolate flex h-svh items-center overflow-hidden bg-background">
+        <div aria-hidden className="absolute inset-0 -z-10 text-[oklch(0.4_0.14_280)]">
+          <WarpGrid />
+        </div>
+        <div className="curtain-inner mx-auto w-full max-w-[1180px] px-6 sm:px-10">
+          <p className="mb-10 flex items-center gap-4 text-[13px] font-medium tracking-[0.2em] text-muted-foreground uppercase">
+            <span aria-hidden className="h-px w-10 bg-foreground/30" />
+            What we do
+          </p>
+          <p data-read className="font-display text-[clamp(2.4rem,5.6vw,5rem)] leading-[1.06] tracking-[-0.02em]">
+            {STATEMENT.map(({ w, em }, i) => (
+              <span key={i}>
+                <span className={cn("read-word", em && "italic text-[oklch(0.42_0.16_278)]")}>{w}</span>{" "}
+              </span>
+            ))}
+          </p>
+        </div>
+      </div>
+      </section>
+
+      {/* ───────────────────────── Latest: its own dark band, rail runs edge to edge ───────────────────────── */}
+      <section id="internships" className="relative isolate z-10 -mt-[100svh] flex min-h-svh flex-col justify-center overflow-hidden bg-[linear-gradient(180deg,oklch(0.5_0.17_281),oklch(0.58_0.16_287)_55%,oklch(0.68_0.14_293))] py-24 text-white shadow-[0_-24px_50px_-28px_oklch(0.2_0.1_280/0.4)]">
+
+        <div className="flex flex-wrap items-end justify-between gap-6 px-[clamp(1.5rem,4vw,4rem)]">
+          <h2 data-mask className="min-w-[18rem] flex-1 text-[clamp(2.2rem,4.6vw,4.2rem)] leading-[1.05] font-medium tracking-[-0.04em] lg:whitespace-nowrap">
+            <span className="mask-line -mx-12 -mt-8 px-12 pt-8 pb-3">
+              <span>
+                <span className="relative mr-3 inline-block px-1">
+                  <svg aria-hidden viewBox="0 0 320 110" className="pointer-events-none absolute -top-5 -left-7 h-[calc(100%+2.2rem)] w-[calc(100%+3.4rem)] text-white/80" fill="none" preserveAspectRatio="none">
+                    <path data-draw d="M22 58C26 22 112 6 192 10c82 4 124 20 114 54-10 32-98 44-188 38C56 98 8 84 14 58" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  <span className="font-display relative text-[oklch(0.86_0.1_300)] italic">Latest</span>
+                </span>
+                Internship opportunities
+              </span>
+            </span>
+          </h2>
+          <RollLink href="/internships" variant="light">
+            Browse all internships
+          </RollLink>
+        </div>
+
+        <LatestJobs />
+      </section>
+
+      <div className="relative z-10 bg-background">
+      {/* ───────────────────────── Roles: horizontal journey ───────────────────────── */}
+      <RolesScroll />
+
+      {/* ───────────────────────── Numbers ───────────────────────── */}
+      <section className="mx-auto max-w-[1280px] px-6 pb-24 sm:px-10">
+        <ul className="grid gap-y-10 border-y border-border py-14 sm:grid-cols-2 lg:grid-cols-4">
+          {STATS.map((s) => (
+            <li key={s.label} className="lg:border-l lg:border-border lg:pl-8 lg:first:border-l-0 lg:first:pl-0">
+              <p className="text-[clamp(3rem,6vw,5rem)] leading-none font-light tracking-[-0.06em] tabular-nums">
+                <span data-count={s.n} data-suffix={s.suffix}>
+                  0
+                </span>
+              </p>
+              <p className="mt-3 text-[16px] text-muted-foreground">{s.label}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ───────────────────────── Why ───────────────────────── */}
+      <section id="why" className="mx-auto max-w-[1280px] px-6 pb-28 sm:px-10">
+        <h2 data-mask className="max-w-3xl text-[clamp(2.2rem,4.8vw,4rem)] leading-[1.05] font-medium tracking-[-0.04em]">
+          <span className="mask-line"><span>Everything in the open,</span></span>
+          <span className="mask-line"><span>nothing left to guess.</span></span>
+        </h2>
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map((f, i) => (
+            <article key={f.title} data-parallax={i % 3 === 1 ? "0.06" : "0.02"} className="rounded-[32px] border border-(--hairline) bg-card p-8 shadow-[0_24px_44px_-34px_oklch(0.2_0.06_280/0.3)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5">
+              <span className="text-[15px] font-medium text-[oklch(0.5_0.15_280)] tabular-nums">0{i + 1}</span>
+              <h3 className="mt-6 text-[24px] leading-tight font-medium tracking-[-0.02em]">{f.title}</h3>
+              <p className="mt-3 text-[16.5px] leading-relaxed text-muted-foreground">{f.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ───────────────────────── CTA ───────────────────────── */}
+      <section id="start">
+        <div className="relative overflow-hidden bg-[linear-gradient(150deg,oklch(0.4_0.16_274),oklch(0.5_0.16_281)_70%)] px-8 py-28 text-center text-white sm:px-14">
+          <span aria-hidden data-parallax="0.3" className="pointer-events-none absolute -top-24 left-[8%] size-[22rem] rounded-full bg-[oklch(0.75_0.13_290/0.35)] blur-3xl" />
+          <span aria-hidden data-parallax="0.15" className="pointer-events-none absolute -right-16 -bottom-28 size-[26rem] rounded-full bg-[oklch(0.8_0.1_300/0.3)] blur-3xl" />
+          <h2 data-mask className="relative text-[clamp(2.8rem,8vw,7rem)] leading-[1] font-medium tracking-[-0.05em]">
+            <span className="mask-line"><span>Ready to bridge</span></span>
+            <span className="mask-line"><span>the gap?</span></span>
+          </h2>
+          <p className="relative mx-auto mt-8 max-w-xl text-[19px] leading-relaxed text-white/75">Create your account and see your first dashboard in under a minute.</p>
+          <div className="relative mt-10 flex flex-wrap items-center justify-center gap-3">
+            <RollLink href="/register" variant="light">
+              Create free account
+            </RollLink>
+            <RollLink href="/internships" variant="ghost" className="text-white">
+              View internships
+            </RollLink>
+          </div>
+        </div>
+      </section>
+
+      </div>
+
+      <footer className="mx-auto flex max-w-[1280px] flex-col items-center justify-between gap-3 px-6 py-10 text-[14px] text-muted-foreground sm:flex-row sm:px-10">
+        <p>
+          <span className="font-semibold text-foreground">CareerBridge</span> · SIH26044 · Ministry of Ayush
+        </p>
+        <p>© 2026 CareerBridge. Built with Django &amp; Next.js.</p>
       </footer>
     </div>
-  );
+  )
 }

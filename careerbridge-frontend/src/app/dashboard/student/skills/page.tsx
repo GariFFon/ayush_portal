@@ -1,5 +1,6 @@
 "use client";
 
+import { ProfileExtras, ResumeAndSkills } from "@/components/profile-extras";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { cn } from "cn";
@@ -53,6 +54,15 @@ export default function StudentSkillsPage() {
       alive = false;
     };
   }, []);
+
+  const reloadMine = () => {
+    getStudentSkills()
+      .then((m) => {
+        setMine(asList<SkillRow>(m));
+        setIsDemo(false);
+      })
+      .catch(() => {});
+  };
 
   useEffect(() => {
     if (!search) return;
@@ -213,6 +223,12 @@ export default function StudentSkillsPage() {
           </Button>
         </Panel>
       </div>
+
+      <div className="grid items-stretch gap-5 lg:grid-cols-12">
+        <ResumeAndSkills demo={isDemo} onSkillsChanged={reloadMine} />
+      </div>
+
+      <ProfileExtras />
     </div>
   );
 }

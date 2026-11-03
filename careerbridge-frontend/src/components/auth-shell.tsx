@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { BrandMark } from "@/components/brand-mark"
 
 import { cn } from "cn"
 
@@ -25,7 +26,7 @@ export function AuthShell({
       <div className="mx-auto grid min-h-svh max-w-[1200px] items-center gap-16 px-5 py-10 sm:px-8 lg:grid-cols-[1fr_28rem]">
         <section className="hidden lg:block">
           <Link href="/" className="inline-flex items-center gap-2.5">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-base font-bold text-primary-foreground">C</span>
+            <BrandMark className="size-11" />
             <span className="text-lg font-medium tracking-tight">CareerBridge</span>
           </Link>
           <h1 className="mt-12 max-w-md text-[3.25rem] font-medium">Your career, bridged.</h1>
@@ -44,7 +45,7 @@ export function AuthShell({
 
         <section className="glass-card rise rounded-[30px] p-8 [--r:30px] sm:p-10">
           <Link href="/" className="mb-8 inline-flex items-center gap-2.5 lg:hidden">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-[15px] font-bold text-primary-foreground">C</span>
+            <BrandMark className="size-10" />
             <span className="text-base font-medium tracking-tight">CareerBridge</span>
           </Link>
           <h2 className="text-[1.75rem] leading-tight font-medium tracking-tight">{title}</h2>

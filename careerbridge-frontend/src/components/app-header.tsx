@@ -3,17 +3,17 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { toast } from "sonner"
 import { cn } from "cn"
 
 import { useAuth } from "@/contexts/auth-context"
-import { ArrowLeftIcon, BellIcon, HomeIcon, SidebarIcon } from "@/components/icons"
+import { ArrowLeftIcon, HomeIcon, SidebarIcon } from "@/components/icons"
 import { isActive, PAGE_TITLES, ROLE_HOME, ROLE_NAV } from "@/lib/nav"
+import { NotificationsMenu } from "@/components/notifications"
 import { useSidebar } from "@/components/ui/sidebar"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 const ICON_BTN =
-  "relative flex size-10 shrink-0 items-center justify-center rounded-full border border-(--hairline) bg-card text-foreground outline-none transition-[background-color,transform] duration-150 hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring active:scale-90 [&_svg]:size-[18px]"
+  "glass-nav relative flex size-11 shrink-0 items-center justify-center rounded-full text-foreground/85 outline-none transition-[transform,color] duration-150 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:scale-90 [&_svg]:size-[18px]"
 
 function Hint({ label, children }: { label: string; children: React.ReactElement }) {
   return (
@@ -67,7 +67,7 @@ export function AppHeader() {
   const topLinks = links.filter((l, i) => links.findIndex((x) => x.href === l.href) === i)
 
   return (
-    <header className="glass-bar sticky top-0 z-30 flex h-[4.5rem] shrink-0 items-center gap-2 px-4 sm:px-6 lg:px-10">
+    <header className="sticky top-0 z-30 flex h-[5.75rem] shrink-0 items-center gap-2 bg-gradient-to-b from-background/90 via-background/50 to-transparent px-4 pt-4 sm:px-6 lg:px-10">
       <Hint label="Menu">
         <button type="button" className={cn(ICON_BTN, "md:hidden")} aria-label="Open menu" onClick={toggleSidebar}>
           <SidebarIcon />
@@ -89,17 +89,18 @@ export function AppHeader() {
       <nav
         ref={navRef}
         aria-label="Primary"
-        className="relative mx-auto hidden min-w-0 gap-1 rounded-full border border-(--hairline) bg-card p-1 lg:flex"
+        className="glass-nav relative mx-auto hidden min-w-0 gap-1 rounded-full p-2 lg:flex"
       >
         {pill && (
           <span
             aria-hidden
-            className="pointer-events-none absolute top-1 bottom-1 left-0 rounded-full bg-lime transition-[transform,width] duration-[360ms] ease-(--ease-drawer)"
+            className="glass-active pointer-events-none absolute top-2 bottom-2 left-0 rounded-full transition-[transform,width] duration-[460ms] ease-[cubic-bezier(0.32,0.72,0,1)]"
             style={{ transform: `translateX(${pill.x}px)`, width: pill.w }}
           />
         )}
         {topLinks.map((l) => {
           const active = isActive(pathname, l)
+          const Icon = l.icon
           return (
             <Link
               key={l.href}
@@ -109,27 +110,18 @@ export function AppHeader() {
               }}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "relative z-10 shrink-0 rounded-full px-5 py-2 text-[14px] font-medium transition-[color,transform] duration-150 ease-(--ease-out) active:scale-[0.96]",
-                active ? "text-(--on-lime)" : "text-muted-foreground hover:text-foreground"
+                "group/tab relative z-10 flex shrink-0 items-center gap-2 rounded-full px-5 py-2.5 text-[15.5px] font-medium transition-[color,transform] duration-300 ease-(--ease-out) active:scale-[0.96]",
+                active ? "text-(--on-lime)" : "text-foreground/55 hover:text-foreground"
               )}
             >
+              <Icon className="size-[18px] transition-transform duration-300 ease-(--ease-out) group-hover/tab:-translate-y-px group-hover/tab:scale-110" />
               {l.label}
             </Link>
           )
         })}
       </nav>
 
-      <Hint label="Notifications">
-        <button
-          type="button"
-          className={cn(ICON_BTN, "ml-auto lg:ml-0")}
-          aria-label="Notifications"
-          onClick={() => toast.success("You're all caught up", { description: "No new notifications right now." })}
-        >
-          <BellIcon />
-          <span className="absolute top-2.5 right-2.5 size-2 rounded-full bg-destructive ring-2 ring-card" />
-        </button>
-      </Hint>
+      <NotificationsMenu className="ml-auto lg:ml-0" />
     </header>
   )
 }

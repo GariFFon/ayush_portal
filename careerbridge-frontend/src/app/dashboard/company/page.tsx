@@ -16,7 +16,6 @@ import {
   OrgAvatar,
   GreetingHeader,
   Panel,
-  Funnel,
   StatTile,
   StatusBadge,
   TaskList,
@@ -125,26 +124,26 @@ export default function CompanyDashboard() {
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile index={2} tone="sage" icon={<InternshipsIcon />} title="Internships" value={stats?.total_internships ?? 0} pill={{ text: `${published} live`, variant: "lime" }} caption="Posted by you" />
+        <StatTile index={2} tone="amber" icon={<InternshipsIcon />} title="Internships" value={stats?.total_internships ?? 0} pill={{ text: `${published} live`, variant: "lime" }} caption="Posted by you" />
         <StatTile index={3} tone="blue" icon={<PeopleIcon />} title="Applicants" value={applicants} caption="Across all listings" />
-        <StatTile index={4} tone="mist" icon={<StarIcon />} title="Shortlisted" value={shortlisted} caption="Moving forward" />
-        <StatTile index={5} tone="violet" icon={<TrophyIcon />} title="Selected" value={selected} href="/dashboard/company/applicants" caption="Offers made" />
+        <StatTile index={4} tone="violet" icon={<StarIcon />} title="Shortlisted" value={shortlisted} caption="Moving forward" />
+        <StatTile index={5} tone="mint" icon={<TrophyIcon />} title="Selected" value={selected} href="/dashboard/company/applicants" caption="Offers made" />
       </div>
 
       {now > 0 && (
-        <div className="grid items-start gap-5 lg:grid-cols-12">
+        <div className="grid items-stretch gap-5 lg:grid-cols-12">
           <YourListings className="lg:col-span-7" items={listings} now={now} />
           <ActivityFeed className="lg:col-span-5" items={activity} now={now} title="Recent activity" />
         </div>
       )}
 
-      <div className="grid items-start gap-5 lg:grid-cols-12">
-        <div className="min-w-0 lg:col-span-8">
+      <div className="grid items-stretch gap-5 lg:grid-cols-12">
+        <div className="flex min-w-0 flex-col lg:col-span-8 [&>*]:flex-1">
           <Panel
             title="Recent applicants"
             style={stagger(6)}
             action={
-              <Link href="/dashboard/company/applicants" className="text-[14px] font-medium underline-offset-4 hover:underline">
+              <Link href="/dashboard/company/applicants" className="text-[16px] font-medium underline-offset-4 hover:underline">
                 View all
               </Link>
             }
@@ -167,10 +166,10 @@ export default function CompanyDashboard() {
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="h-9 text-xs font-medium text-muted-foreground">Candidate</TableHead>
-                    <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground sm:table-cell">Role</TableHead>
-                    <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground md:table-cell">Applied</TableHead>
-                    <TableHead className="h-9 text-right text-xs font-medium text-muted-foreground">Status</TableHead>
+                    <TableHead>Candidate</TableHead>
+                    <TableHead className="hidden sm:table-cell">Role</TableHead>
+                    <TableHead className="hidden md:table-cell">Applied</TableHead>
+                    <TableHead className="text-right">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -197,16 +196,9 @@ export default function CompanyDashboard() {
           </Panel>
         </div>
 
-        <div className="min-w-0 space-y-5 lg:col-span-4">
+        <div className="flex min-w-0 flex-col lg:col-span-4 [&>*]:flex-1">
           <Panel title="Priority tasks" style={stagger(7)}>
             <TaskList items={tasks} highlight={nextTask} />
-          </Panel>
-          <Panel title="Funnel" style={stagger(8)}>
-            <Funnel stages={[
-              { label: "Applicants", value: applicants, color: "var(--c-sky)" },
-              { label: "Shortlisted", value: shortlisted, color: "var(--c-violet)" },
-              { label: "Selected", value: selected, color: "var(--c-mint)" },
-            ]} />
           </Panel>
         </div>
       </div>

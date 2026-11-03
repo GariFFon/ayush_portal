@@ -108,10 +108,10 @@ export default function CompanyApplicantsPage() {
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile index={2} tone="sage" icon={<PeopleIcon />} title="Total" value={total} caption="All applications" />
-        <StatTile index={3} tone="blue" icon={<ClockIcon />} title="New" value={count("applied")} caption="Waiting for review" />
-        <StatTile index={4} tone="mist" icon={<StarIcon />} title="Shortlisted" value={count("shortlisted")} caption="Moving forward" />
-        <StatTile index={5} tone="violet" icon={<TrophyIcon />} title="Selected" value={count("selected")} caption="Offers made" />
+        <StatTile index={2} tone="blue" icon={<PeopleIcon />} title="Total" value={total} caption="All applications" />
+        <StatTile index={3} tone="amber" icon={<ClockIcon />} title="New" value={count("applied")} caption="Waiting for review" />
+        <StatTile index={4} tone="violet" icon={<StarIcon />} title="Shortlisted" value={count("shortlisted")} caption="Moving forward" />
+        <StatTile index={5} tone="mint" icon={<TrophyIcon />} title="Selected" value={count("selected")} caption="Offers made" />
       </div>
 
       <Panel title="All applicants" style={stagger(6)} contentClassName="space-y-5">
@@ -132,10 +132,10 @@ export default function CompanyApplicantsPage() {
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="h-9 text-xs font-medium text-muted-foreground">Candidate</TableHead>
-                <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground lg:table-cell">University</TableHead>
-                <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground sm:table-cell">Role</TableHead>
-                <TableHead className="h-9 text-xs font-medium text-muted-foreground">Status</TableHead>
+                <TableHead>Candidate</TableHead>
+                <TableHead className="hidden lg:table-cell">University</TableHead>
+                <TableHead className="hidden sm:table-cell">Role</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead className="w-24" />
               </TableRow>
             </TableHeader>

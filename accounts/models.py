@@ -16,6 +16,12 @@ class User(AbstractUser):
         choices=Role.choices,
         default=Role.STUDENT,
     )
+    class Gender(models.TextChoices):
+        MALE = "male", "Male"
+        FEMALE = "female", "Female"
+        OTHER = "other", "Prefer not to say"
+
+    gender = models.CharField(max_length=10, choices=Gender.choices, blank=True, default="")
     phone = models.CharField(max_length=15, blank=True)
     profile_photo = models.ImageField(
         upload_to="profile_photos/", null=True, blank=True

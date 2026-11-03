@@ -24,6 +24,7 @@ function RegisterForm() {
     first_name: "",
     last_name: "",
     role: params.get("role") || "student",
+    gender: "",
     password: "",
     password2: "",
   });
@@ -85,6 +86,18 @@ function RegisterForm() {
               <SelectItem value="student">Student</SelectItem>
               <SelectItem value="company">Company recruiter</SelectItem>
               <SelectItem value="university">University representative</SelectItem>
+            </SelectContent>
+          </Select>
+        </Field>
+        <Field label="Gender">
+          <Select value={form.gender} items={{ male: "Male", female: "Female", other: "Prefer not to say" }} onValueChange={(v) => v && set("gender", v)}>
+            <SelectTrigger id="gender">
+              <SelectValue placeholder="Select gender" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="male">Male</SelectItem>
+              <SelectItem value="female">Female</SelectItem>
+              <SelectItem value="other">Prefer not to say</SelectItem>
             </SelectContent>
           </Select>
         </Field>

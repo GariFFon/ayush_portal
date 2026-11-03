@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
 import { applyToInternship, getInternships } from "@/lib/api";
@@ -20,8 +21,9 @@ export default function InternshipsPage() {
   const [internships, setInternships] = useState<BrowseInternship[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDemo, setIsDemo] = useState(false);
-  const [search, setSearch] = useState("");
-  const [workMode, setWorkMode] = useState("all");
+  const params = useSearchParams();
+  const [search, setSearch] = useState(params.get("q") ?? "");
+  const [workMode, setWorkMode] = useState(["remote", "hybrid", "onsite"].includes(params.get("mode") ?? "") ? (params.get("mode") as string) : "all");
   const [applyTarget, setApplyTarget] = useState<BrowseInternship | null>(null);
   const [coverLetter, setCoverLetter] = useState("");
   const [applying, setApplying] = useState(false);
@@ -92,13 +94,13 @@ export default function InternshipsPage() {
         demo={isDemo}
       />
 
-      <div className="rise tone-white tint glass-card flex flex-col gap-3 rounded-[28px] p-3 sm:flex-row" style={{ "--i": 1, "--r": "28px" } as React.CSSProperties}>
+      <div className="rise flex flex-col gap-3 sm:flex-row" style={{ "--i": 1 } as React.CSSProperties}>
         <div className="relative flex-1">
-          <SearchIcon className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-muted-foreground" />
-          <Input className="h-12 border-transparent bg-secondary pl-11" placeholder="Search by title, company or skill…" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <SearchIcon className="pointer-events-none absolute top-1/2 left-5 z-10 size-5 -translate-y-1/2 text-muted-foreground" />
+          <Input className="pl-13" placeholder="Search by title, company or skill…" value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
         <Select value={workMode} items={{ all: "All modes", remote: "Remote", hybrid: "Hybrid", onsite: "On-site" }} onValueChange={(v) => v && setWorkMode(v)}>
-          <SelectTrigger className="h-12 w-full border-transparent bg-secondary sm:w-48">
+          <SelectTrigger className="w-full sm:w-56">
             <SelectValue placeholder="Work mode" />
           </SelectTrigger>
           <SelectContent>

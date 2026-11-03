@@ -52,9 +52,9 @@ export async function apiFetch<T = unknown>(
   path: string,
   { method = "GET", body, auth = true }: ApiOptions = {}
 ): Promise<T> {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
+  const isForm = typeof FormData !== "undefined" && body instanceof FormData;
+  const headers: Record<string, string> = isForm ? {} : { "Content-Type": "application/json" };
+  const payload = isForm ? (body as FormData) : body ? JSON.stringify(body) : undefined;
 
   if (auth) {
     let { access } = getTokens();
@@ -69,7 +69,7 @@ export async function apiFetch<T = unknown>(
   const res = await fetch(`${API_BASE}${path}`, {
     method,
     headers,
-    body: body ? JSON.stringify(body) : undefined,
+    body: payload,
   });
 
   // If 401, try refresh once
@@ -80,7 +80,7 @@ export async function apiFetch<T = unknown>(
       const retried = await fetch(`${API_BASE}${path}`, {
         method,
         headers,
-        body: body ? JSON.stringify(body) : undefined,
+        body: payload,
       });
       if (!retried.ok) throw new Error(await retried.text());
       return retried.json() as Promise<T>;
@@ -113,10 +113,17 @@ export async function register(payload: {
   first_name: string;
   last_name: string;
   role: string;
+  gender?: string;
   password: string;
   password2: string;
 }) {
   return apiFetch("/accounts/register/", { method: "POST", body: payload, auth: false });
+}
+
+export async function uploadProfilePhoto(file: File) {
+  const form = new FormData();
+  form.append("profile_photo", file);
+  return apiFetch("/accounts/profile/", { method: "PATCH", body: form });
 }
 
 export async function getMe() {
@@ -219,6 +226,15 @@ export async function getUniversityStats() {
 // ── Institutions ──────────────────────────────────────────────────────────
 export async function getUniversities() {
   return apiFetch("/institutions/universities/", { auth: false });
+}
+
+export async function searchUniversities(query: string) {
+  const q = query ? `?search=${encodeURIComponent(query)}` : "";
+  return apiFetch(`/institutions/universities/${q}`, { auth: false });
+}
+
+export async function createUniversity(name: string) {
+  return apiFetch("/institutions/universities/", { method: "POST", body: { name } });
 }
 
 export async function getCompanies() {

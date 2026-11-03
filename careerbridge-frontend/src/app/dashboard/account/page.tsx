@@ -1,16 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useThemeRipple } from "@/lib/theme-ripple";
 import { toast } from "sonner";
 import { cn } from "cn";
 
 import { useAuth } from "@/contexts/auth-context";
-import { LogoutIcon, MonitorIcon, MoonIcon, SunIcon } from "@/components/icons";
-import { OrgAvatar, PageHeader, Panel, stagger } from "@/components/kit";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { usePhotoUpload } from "@/lib/use-photo-upload";
+import { MonitorIcon, MoonIcon, SunIcon } from "@/components/icons";
+import { PageHeader, Panel, ProfileCard, stagger } from "@/components/kit";
 
 const THEMES = [
   { v: "light", label: "Light", Icon: SunIcon },
@@ -27,6 +25,7 @@ export default function AccountPage() {
   const { user, logout } = useAuth();
   const { theme, setTheme } = useThemeRipple();
   const router = useRouter();
+  const photo = usePhotoUpload();
   if (!user) return null;
 
   const name = user.full_name || user.username;
@@ -36,34 +35,27 @@ export default function AccountPage() {
       <PageHeader title="Account" subtitle="Your details, appearance and shortcuts." />
 
       <div className="grid gap-5 lg:grid-cols-12">
-        <div className="rise tone-lime tint dbl flex flex-col rounded-[32px] border p-7 [--r:32px] lg:col-span-5">
-          <OrgAvatar name={name} className="size-16 text-lg" />
-          <h2 className="mt-6 text-[2rem] leading-tight">{name}</h2>
-          <p className="mt-1 text-[15px] text-muted-foreground">{user.email}</p>
-          <div className="mt-4">
-            <Badge variant="violet" className="capitalize">{user.role}</Badge>
-          </div>
-          <div className="mt-auto flex flex-wrap gap-3 pt-10">
-            {user.role === "student" && (
-              <Button size="lg" render={<Link href="/dashboard/student/profile" />} nativeButton={false}>
-                Edit profile
-              </Button>
-            )}
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => {
-                logout();
-                toast("Signed out");
-                router.push("/");
-              }}
-            >
-              <LogoutIcon /> Log out
-            </Button>
-          </div>
-        </div>
+        <ProfileCard
+          className="lg:col-span-4"
+          name={name}
+          status={user.role === "company" ? "Hiring now" : "Active"}
+          handle={user.email || user.username}
+          photo={user.profile_photo}
+          gender={user.gender}
+          onPhoto={photo.upload}
+          uploading={photo.uploading}
+          style={stagger(0)}
+          href="/dashboard/student/profile"
+          roleLabel={user.role === "company" ? "Recruiter" : user.role === "university" ? "University" : user.role}
+          action="Log out"
+          onAction={() => {
+            logout();
+            toast("Signed out");
+            router.push("/");
+          }}
+        />
 
-        <Panel className="lg:col-span-7" title="Appearance" style={stagger(1)} contentClassName="space-y-4">
+        <Panel className="lg:col-span-8" title="Appearance" style={stagger(1)} contentClassName="space-y-4">
           <p className="text-[14px] text-muted-foreground">Choose how CareerBridge looks on this device.</p>
           <div className="grid grid-cols-3 gap-3">
             {THEMES.map(({ v, label, Icon }) => (

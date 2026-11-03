@@ -6,10 +6,13 @@
  */
 
 import * as React from "react"
+import { Portrait, hasPortrait } from "@/components/portrait"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { cn } from "cn"
 
-import { ArrowRightUpIcon, ChevronRightIcon } from "@/components/icons"
+import { ArrowRightIcon, ArrowRightUpIcon, PlusIcon, CameraIcon
+} from "@/components/icons"
 import { CountUp } from "@/components/count-up"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -46,11 +49,11 @@ export function Panel({
     <Card className={cn("rise", tone && `tone-${tone} tint`, className)} style={style}>
       {title && (
         <CardHeader>
-          <CardTitle className="text-[22px] leading-tight font-medium">{title}</CardTitle>
+          <CardTitle className="text-[28px] leading-tight font-medium tracking-[-0.02em]">{title}</CardTitle>
           {action && <CardAction>{action}</CardAction>}
         </CardHeader>
       )}
-      <CardContent className={contentClassName}>{children}</CardContent>
+      <CardContent className={cn("flex-1", contentClassName)}>{children}</CardContent>
     </Card>
   )
 }
@@ -101,7 +104,7 @@ export function StatTile({ title, value, unit, pill, caption, tone = "blue", ico
       <CardHeader className="items-center">
         <div className="flex items-center gap-3">
           {icon && <IconChip>{icon}</IconChip>}
-          <CardTitle className="text-[15px] leading-snug font-medium">{title}</CardTitle>
+          <CardTitle className="text-[24px] leading-snug font-medium tracking-[-0.02em]">{title}</CardTitle>
         </div>
         {href && (
           <CardAction>
@@ -113,14 +116,14 @@ export function StatTile({ title, value, unit, pill, caption, tone = "blue", ico
       </CardHeader>
       <CardContent>
         <div className="flex items-baseline gap-2">
-          <span className={cn("text-[3.5rem] leading-none font-light tracking-[-0.055em] tabular-nums", false)}>
+          <span className={cn("text-[5rem] leading-none font-light tracking-[-0.06em] tabular-nums", false)}>
             {typeof value === "number" ? <CountUp value={value} delay={index * 40} /> : value}
           </span>
-          {unit && <span className="text-[1.75rem] font-light text-muted-foreground">{unit}</span>}
+          {unit && <span className="text-[2.25rem] font-light text-muted-foreground">{unit}</span>}
         </div>
         {(caption || pill) && (
           <div className="mt-3 flex items-center justify-between gap-2">
-            {caption && <p className="min-w-0 truncate text-[13px] text-muted-foreground">{caption}</p>}
+            {caption && <p className="min-w-0 truncate text-[16.5px] text-muted-foreground">{caption}</p>}
             {pill && <Badge variant={pill.variant ?? "violet"} className="shrink-0">{pill.text}</Badge>}
           </div>
         )}
@@ -154,7 +157,7 @@ export function ProgressBar({
       <div className={cn("h-1.5 w-full overflow-hidden rounded-full", track === "white" ? "bg-white" : "bg-foreground/10")}>
         <div className={cn("grow-x h-full rounded-full", "bg-foreground")} style={{ width: `${v}%` }} />
       </div>
-      <div className="mt-2.5 flex items-center justify-between text-[14px] text-muted-foreground">
+      <div className="mt-2.5 flex items-center justify-between text-[16px] text-muted-foreground">
         <span>{label}</span>
         <span className="tabular-nums">{Math.round(v)}%</span>
       </div>
@@ -195,7 +198,7 @@ export function SegBars({
         const pct = (d.value / max) * 100
         return (
           <li key={d.label} className="grid grid-cols-[6.75rem_1fr] items-center gap-4">
-            <span className="truncate text-[13px] text-muted-foreground">{d.label}</span>
+            <span className="truncate text-[15.5px] text-muted-foreground">{d.label}</span>
             <div className="relative h-9 overflow-hidden rounded-[12px] bg-foreground/[0.045]">
               {d.value > 0 ? (
                 <div
@@ -205,11 +208,11 @@ export function SegBars({
                   <span className="w-3.5 shrink-0 rounded-[10px]" style={{ background: c.bg, opacity: 0.4 }} />
                   <span className="w-3.5 shrink-0 rounded-[10px]" style={{ background: c.bg, opacity: 0.7 }} />
                   <span
-                    className="flex flex-1 items-center justify-end rounded-[10px] px-3 text-[13px] font-medium tabular-nums"
+                    className="flex flex-1 items-center justify-end rounded-[10px] px-3 text-[15px] font-medium tabular-nums"
                     style={{
                       color: c.fg,
                       backgroundColor: c.bg,
-                      backgroundImage: "hatch" in c && c.hatch ? HATCH : undefined,
+                      backgroundImage: HATCH,
                     }}
                   >
                     {d.value}
@@ -267,8 +270,8 @@ export function Funnel({
     <div className={cn("grid gap-5", className)} style={{ gridTemplateColumns: `repeat(${stages.length}, minmax(0, 1fr))` }}>
       {stages.map((st) => (
         <div key={st.label} className="min-w-0 border-l-2 pl-3.5" style={{ borderColor: st.color }}>
-          <p className="truncate text-[13px] text-muted-foreground">{st.label}</p>
-          <p className="mt-1 text-[2rem] leading-none font-light tracking-[-0.04em] tabular-nums">{st.value}</p>
+          <p className="truncate text-[15.5px] text-muted-foreground">{st.label}</p>
+          <p className="mt-1.5 text-[3rem] leading-none font-light tracking-[-0.05em] tabular-nums">{st.value}</p>
           <TickProgress className="mt-5 h-9" value={(st.value / max) * 100} color={st.color} ticks={10} />
         </div>
       ))}
@@ -278,7 +281,7 @@ export function Funnel({
 
 /* ── Radial tick gauge: filled ticks == the actual value ───────────────── */
 export function Gauge({ value, label, className }: { value: number; label: string; className?: string }) {
-  const v = Math.max(0, Math.min(100, value))
+  const v = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0))
   const [shown, setShown] = React.useState(false)
   React.useEffect(() => {
     const id = requestAnimationFrame(() => setShown(true))
@@ -287,8 +290,8 @@ export function Gauge({ value, label, className }: { value: number; label: strin
   const N = 41
   const cx = 130
   const cy = 128
-  const r1 = 84
-  const r2 = 112
+  const r1 = 94
+  const r2 = 120
   const filled = (v / 100) * (N - 1)
   return (
     <div className={cn("relative mx-auto w-full max-w-[17rem]", className)}>
@@ -317,11 +320,11 @@ export function Gauge({ value, label, className }: { value: number; label: strin
         })}
       </svg>
       <div className="absolute inset-x-0 bottom-0 text-center">
-        <p className="text-[3.25rem] leading-none font-light tracking-[-0.05em] tabular-nums">
+        <p className="text-[3.75rem] leading-none font-light tracking-[-0.06em] tabular-nums">
           <CountUp value={Math.round(v)} />
-          <span className="ml-0.5 text-[1.25rem] tracking-normal text-muted-foreground">%</span>
+          <span className="ml-1 text-[1.75rem] tracking-normal text-muted-foreground">%</span>
         </p>
-        <p className="mt-1.5 text-[13px] text-muted-foreground">{label}</p>
+        <p className="mt-2 text-[16px] text-muted-foreground">{label}</p>
       </div>
     </div>
   )
@@ -444,44 +447,46 @@ function StepRing({ value, color, size = 52 }: { value: number; color: string; s
   )
 }
 
-/** "Your plan": overall progress, then a 2×2 grid of ring tiles — the next step is highlighted. */
+/** "Your plan": overall progress, then four evenly spaced steps — the next one is called out. */
 export function TaskList({ items, highlight = 0 }: { items: TaskItem[]; highlight?: number }) {
   const clamp = (v: number) => Math.max(0, Math.min(1, v))
   const overall = (items.reduce((n, t) => n + clamp(t.progress), 0) / Math.max(1, items.length)) * 100
   const doneCount = items.filter((t) => t.progress >= 1).length
   return (
-    <div>
+    <div className="flex h-full flex-col">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <p className="text-[13px] text-muted-foreground">Plan progress</p>
-          <p className="mt-1.5 text-[2.5rem] leading-none font-light tracking-[-0.05em] tabular-nums">
+          <p className="text-[16px] text-muted-foreground">Plan progress</p>
+          <p className="mt-1.5 text-[4rem] leading-none font-light tracking-[-0.06em] tabular-nums">
             {Math.round(overall)}
-            <span className="ml-0.5 text-[16px] tracking-normal text-muted-foreground">%</span>
+            <span className="ml-1 text-[22px] tracking-normal text-muted-foreground">%</span>
           </p>
         </div>
-        <p className="pb-1 text-[12.5px] text-muted-foreground tabular-nums">
+        <p className="pb-2 text-[15px] text-muted-foreground tabular-nums">
           {doneCount} of {items.length} complete
         </p>
       </div>
       <TickProgress className="mt-4 h-6" value={overall} ticks={26} />
 
-      <ul className="stagger mt-6 grid grid-cols-2 gap-3">
+      <ul className="stagger mt-5 flex flex-1 flex-col justify-between divide-y divide-border">
         {items.map((t, i) => {
           const done = t.progress >= 1
           const next = i === highlight && !done
           return (
-            <li key={t.title}>
+            <li key={t.title} className="flex-1">
               <Link
                 href={t.href}
-                className={cn(
-                  "group/step relative flex h-full min-h-[10.5rem] flex-col rounded-[26px] border p-4 outline-none transition-[transform,background-color,border-color] duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]",
-                  next ? "tone-lime tint dbl border-transparent [--r:26px]" : "border-(--hairline) bg-secondary/50 hover:bg-secondary"
-                )}
+                className="group/step -mx-3 flex h-full min-h-[4.5rem] items-center gap-4 rounded-2xl px-3 py-2.5 outline-none transition-[background-color,transform] duration-200 hover:bg-secondary/70 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99]"
               >
-                <ArrowRightUpIcon className="absolute top-4 right-4 size-4 text-muted-foreground transition-[transform,color] duration-200 group-hover/step:translate-x-0.5 group-hover/step:-translate-y-0.5 group-hover/step:text-foreground" />
-                <StepRing value={t.progress} color={STEP_COLORS[i % STEP_COLORS.length]} />
-                <p className="mt-auto pt-5 text-[14.5px] leading-snug font-medium">{t.title}</p>
-                <p className="mt-1 line-clamp-2 text-[12.5px] leading-snug text-muted-foreground">{done ? "All done" : t.description}</p>
+                <StepRing value={t.progress} color={STEP_COLORS[i % STEP_COLORS.length]} size={48} />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[17px] leading-snug font-medium tracking-[-0.01em]">{t.title}</span>
+                  <span className="mt-0.5 flex items-center gap-2 text-[14.5px] text-muted-foreground">
+                    {next && <span className="shrink-0 rounded-full bg-lime px-2.5 py-0.5 text-[12px] font-medium text-(--on-lime)">Up next</span>}
+                    <span className="truncate">{done ? "All done" : t.description}</span>
+                  </span>
+                </span>
+                <ArrowRightUpIcon className="size-[18px] shrink-0 text-muted-foreground transition-[transform,color] duration-200 group-hover/step:translate-x-0.5 group-hover/step:-translate-y-0.5 group-hover/step:text-foreground" />
               </Link>
             </li>
           )
@@ -507,11 +512,11 @@ export function FrostStat({
 }) {
   return (
     <div className={cn("frost rounded-[24px] p-5", className)}>
-      <p className="text-[12.5px] font-medium tracking-[0.01em] text-muted-foreground">{label}</p>
+      <p className="text-[17px] font-medium text-muted-foreground">{label}</p>
       {value !== undefined && (
-        <p className="mt-3 text-[2.25rem] leading-none font-light tracking-[-0.045em] tabular-nums">{value}</p>
+        <p className="mt-3 text-[3.25rem] leading-none font-light tracking-[-0.05em] tabular-nums">{value}</p>
       )}
-      {caption && <p className="mt-2 text-[12.5px] text-muted-foreground">{caption}</p>}
+      {caption && <p className="mt-2.5 text-[15.5px] text-muted-foreground">{caption}</p>}
       {children}
     </div>
   )
@@ -530,8 +535,8 @@ export function Field({
   children: React.ReactNode
 }) {
   return (
-    <div className={cn("space-y-2", className)}>
-      <label className="block text-[13px] font-medium text-muted-foreground">{label}</label>
+    <div className={cn("space-y-2.5", className)}>
+      <label className="block pl-1 text-[15px] font-medium text-foreground/75">{label}</label>
       {children}
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
     </div>
@@ -553,11 +558,11 @@ export function GreetingHeader({
   return (
     <div className="rise flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
       <div className="min-w-0">
-        <h1 className="text-[clamp(2rem,3.6vw,2.75rem)] leading-[1.05] font-light tracking-[-0.045em]">
+        <h1 className="text-[clamp(2.5rem,4.4vw,3.75rem)] leading-[1.05] font-light tracking-[-0.045em]">
           Welcome back, <span className="font-medium">{name}</span>
         </h1>
         {(subtitle || demo) && (
-          <p className="mt-3 text-[15px] text-muted-foreground">
+          <p className="mt-3 text-[18px] text-muted-foreground">
             {subtitle}
             {demo && <span className="ml-2 text-[13px] opacity-60">· Showing sample data</span>}
           </p>
@@ -586,11 +591,11 @@ export function PageHeader({
     <div className="rise flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
       <div>
         <div className="flex items-center gap-3">
-          <h1 className="text-[2.75rem]">{title}</h1>
+          <h1 className="text-[clamp(2.5rem,4.4vw,3.5rem)]">{title}</h1>
           {badge}
         </div>
         {(subtitle || demo) && (
-          <p className="mt-3 text-[16px] text-muted-foreground">
+          <p className="mt-3 text-[18px] text-muted-foreground">
             {subtitle}
             {demo && <span className="ml-2 text-[13px] opacity-60">· Showing sample data</span>}
           </p>
@@ -644,27 +649,19 @@ export function HeroCard({
       <div className="flex items-center gap-3">
         <OrgAvatar name={name} className="size-12" />
         <div className="leading-tight">
-          <p className="text-[17px] font-medium">{name}</p>
-          <p className="mt-0.5 text-[14px] text-muted-foreground">{role}</p>
+          <p className="text-[22px] font-medium tracking-[-0.01em]">{name}</p>
+          <p className="mt-0.5 text-[16px] text-muted-foreground">{role}</p>
         </div>
-        <p className="ml-auto text-right text-[13px] leading-tight text-muted-foreground">
+        <p className="ml-auto text-right text-[15px] leading-tight text-muted-foreground">
           {kicker}
-          <span className="mt-0.5 block text-[1.5rem] font-light tracking-tight text-foreground tabular-nums">{value}</span>
+          <span className="mt-0.5 block text-[2.25rem] font-light tracking-tight text-foreground tabular-nums">{value}</span>
         </p>
       </div>
 
       <Gauge className="my-auto pt-6 pb-2" value={progress.value} label={progress.label} />
 
       <div className="mt-6 flex items-center gap-3">
-        <Link
-          href={nextHref}
-          className="flex h-14 min-w-0 flex-1 items-center gap-3 rounded-full border border-(--hairline) bg-card pr-5 pl-2 transition-[background-color,transform] duration-150 hover:bg-secondary active:scale-[0.98]"
-        >
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-secondary">
-            <ChevronRightIcon className="size-[18px]" />
-          </span>
-          <span className="min-w-0 flex-1 truncate text-[15px] font-medium">{nextLabel}</span>
-        </Link>
+        <SlideCta href={nextHref} label={nextLabel} />
         <Link
           href={nextHref}
           aria-label={nextLabel}
@@ -674,6 +671,187 @@ export function HeroCard({
         </Link>
       </div>
     </div>
+  )
+}
+
+const PC_BTN =
+  "flex h-12 w-full items-center justify-center gap-1.5 rounded-full bg-white text-[15.5px] font-medium text-[oklch(0.3_0.1_280)] shadow-[0_8px_20px_-10px_oklch(0.2_0.06_280/0.6)] transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98]"
+
+/** Stacked, masked backdrop-blur layers: blur ramps up smoothly from nothing to heavy. */
+function ProgressiveBlur({ className }: { className?: string }) {
+  const layers = [1, 2, 4, 8, 16, 28]
+  const n = layers.length
+  return (
+    <div aria-hidden className={cn("pointer-events-none", className)}>
+      {layers.map((px, i) => {
+        const a = (i / (n + 1)) * 100
+        const b = ((i + 1) / (n + 1)) * 100
+        const c = ((i + 2) / (n + 1)) * 100
+        const d = ((i + 3) / (n + 1)) * 100
+        const mask = `linear-gradient(to bottom, transparent ${a}%, black ${b}%, black ${c}%, transparent ${Math.min(d, 100)}%)`
+        const last = i === n - 1
+        const m = last ? `linear-gradient(to bottom, transparent ${a}%, black ${b}%)` : mask
+        return (
+          <span
+            key={px}
+            className="absolute inset-0"
+            style={{ backdropFilter: `blur(${px}px)`, WebkitBackdropFilter: `blur(${px}px)`, maskImage: m, WebkitMaskImage: m }}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+/* ── Profile card: portrait scene, name on top, handle + action on the bottom ── */
+export function ProfileCard({
+  name,
+  status,
+  handle,
+  photo,
+  gender,
+  href,
+  onAction,
+  onPhoto,
+  uploading,
+  style,
+  roleLabel,
+  action = "View profile",
+  className,
+}: {
+  name: string
+  status: string
+  handle: string
+  photo?: string | null
+  gender?: string | null
+  href: string
+  onAction?: () => void
+  onPhoto?: (file: File) => void
+  uploading?: boolean
+  style?: React.CSSProperties
+  roleLabel?: string
+  action?: string
+  className?: string
+}) {
+  const initials = name
+    .split(" ")
+    .map((p) => p[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase()
+  return (
+    <div
+      className={cn(
+        "rise pc-theme group/pc relative isolate flex min-h-[23rem] flex-col overflow-hidden rounded-[32px] text-white shadow-[0_1px_2px_oklch(0.2_0.04_280/0.08),0_24px_44px_-24px_oklch(0.3_0.12_280/0.5)]",
+        className
+      )}
+      style={{ ...style, background: "linear-gradient(165deg, var(--pc-1) 0%, var(--pc-2) 55%, var(--pc-3) 100%)" }}
+    >
+      {photo ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={photo} alt="" className="photo-in absolute inset-0 -z-10 size-full object-cover" />
+      ) : hasPortrait(gender) ? (
+        <Portrait gender={gender} className="photo-in absolute inset-0 -z-10 size-full" />
+      ) : (
+        <>
+          {/* soft fading bars, like a quiet equaliser */}
+          <div aria-hidden className="photo-in absolute inset-x-0 bottom-0 -z-10 flex h-3/5 items-end justify-between gap-[5px] px-5 opacity-60">
+            {Array.from({ length: 22 }, (_, i) => (
+              <span key={i} className="w-full rounded-t-full bg-gradient-to-t from-white/35 to-white/0" style={{ height: `${28 + ((i * 37) % 62)}%` }} />
+            ))}
+          </div>
+          <span aria-hidden className="absolute top-[50%] left-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 text-[8rem] leading-none font-light tracking-[-0.06em] text-white/25 select-none">
+            {initials}
+          </span>
+        </>
+      )}
+      {/* progressive blur: the picture melts into focus-less glass toward the bottom */}
+      <ProgressiveBlur className="absolute inset-x-0 bottom-0 -z-10 h-[42%]" />
+      <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-[38%] bg-gradient-to-t from-(--pc-deep) to-transparent" />
+      <span aria-hidden className="absolute inset-0 -z-10 rounded-[32px] shadow-[inset_0_1px_0_oklch(1_0_0/0.35),inset_0_0_0_1px_oklch(1_0_0/0.14)]" />
+
+      <div className="rise px-6 pt-7 text-center" style={{ "--i": 4 } as React.CSSProperties}>
+        <p className="text-[26px] leading-tight font-medium tracking-[-0.02em] [text-shadow:0_1px_14px_oklch(0.25_0.08_280/0.45)]">{name}</p>
+        <p className="mt-2 inline-flex items-center gap-2 text-[15px] text-white/85">
+          <span className="relative flex size-2.5">
+            <span className="absolute inline-flex size-full animate-ping rounded-full bg-white/70" />
+            <span className="relative inline-flex size-2.5 rounded-full bg-white" />
+          </span>
+          {status}
+        </p>
+      </div>
+
+      {onPhoto && (
+        <label
+          title="Change photo"
+          className="absolute top-4 right-4 flex size-10 cursor-pointer items-center justify-center rounded-full bg-white/25 text-white ring-1 ring-white/40 backdrop-blur transition-[background-color,transform] duration-150 hover:bg-white/40 active:scale-90 has-focus-visible:ring-2 has-focus-visible:ring-white"
+        >
+          <CameraIcon className={cn("size-5", uploading && "animate-pulse")} />
+          <span className="sr-only">Change photo</span>
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className="sr-only"
+            disabled={uploading}
+            onChange={(e) => {
+              const f = e.target.files?.[0]
+              if (f) onPhoto(f)
+              e.target.value = ""
+            }}
+          />
+        </label>
+      )}
+
+      <div className="rise mt-auto space-y-3.5 p-4" style={{ "--i": 6 } as React.CSSProperties}>
+        <div className="flex items-center gap-3 px-1">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/25 text-[14px] font-semibold ring-1 ring-white/40 backdrop-blur">
+            {initials}
+          </span>
+          <span className="min-w-0 flex-1 leading-tight">
+            <span className="block truncate text-[15.5px] font-medium">{handle}</span>
+            <span className="mt-0.5 block text-[13.5px] text-white/75">{roleLabel ?? (action === "View profile" ? "Student" : "Recruiter")}</span>
+          </span>
+        </div>
+        {onAction ? (
+          <button type="button" onClick={onAction} className={PC_BTN}>
+            {action}
+          </button>
+        ) : (
+          <Link href={href} className={PC_BTN}>
+            <PlusIcon className="size-4" /> {action}
+          </Link>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/** Pill link: on hover the arrow glides over the label (which blurs); on tap it slides home, then navigates. */
+function SlideCta({ href, label }: { href: string; label: string }) {
+  const router = useRouter()
+  const [go, setGo] = React.useState(false)
+  return (
+    <a
+      href={href}
+      data-go={go}
+      onMouseEnter={() => router.prefetch(href)}
+      onFocus={() => router.prefetch(href)}
+      onClick={(e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+        e.preventDefault()
+        if (go) return
+        setGo(true)
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        window.setTimeout(() => router.push(href), reduce ? 0 : 900)
+      }}
+      className="group/cta relative block h-14 min-w-0 flex-1 overflow-hidden rounded-full border border-(--hairline) bg-card outline-none [container-type:inline-size] focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.985]"
+    >
+      <span className="cta-chip absolute top-1.5 bottom-1.5 left-1.5 z-10 flex w-11 items-center justify-center rounded-full bg-secondary text-foreground">
+        <ArrowRightIcon className="size-[18px]" />
+      </span>
+      <span className="cta-label absolute inset-y-0 right-5 left-16 flex items-center truncate text-[17px] font-medium">{label}</span>
+    </a>
   )
 }
 
@@ -700,8 +878,8 @@ export function QuickTile({
         <ArrowRightUpIcon className="size-[18px]" />
       </span>
       <span>
-        <span className="block text-[15px] font-medium">{label}</span>
-        <span className="mt-0.5 block text-[12.5px] leading-snug text-muted-foreground">{hint}</span>
+        <span className="block text-[18px] font-medium">{label}</span>
+        <span className="mt-0.5 block text-[14.5px] leading-snug text-muted-foreground">{hint}</span>
       </span>
     </Link>
   )

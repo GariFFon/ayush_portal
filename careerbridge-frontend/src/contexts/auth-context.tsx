@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { mediaUrl, titleCase } from "@/lib/format";
 import { getMe, login as apiLogin, register as apiRegister, clearTokens } from "@/lib/api";
 
 interface User {
@@ -12,6 +13,7 @@ interface User {
   full_name: string;
   role: "student" | "company" | "university" | "admin";
   profile_photo: string | null;
+  gender?: "male" | "female" | "other" | "";
 }
 
 interface AuthContextType {
@@ -20,6 +22,7 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<void>;
   register: (data: Parameters<typeof apiRegister>[0]) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,7 +34,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchUser = useCallback(async () => {
     try {
       const me = await getMe() as User;
-      setUser(me);
+      setUser({
+        ...me,
+        first_name: titleCase(me.first_name),
+        last_name: titleCase(me.last_name),
+        full_name: titleCase(me.full_name),
+        profile_photo: mediaUrl(me.profile_photo),
+      });
     } catch {
       setUser(null);
     } finally {
@@ -58,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser: fetchUser }}>
       {children}
     </AuthContext.Provider>
   );

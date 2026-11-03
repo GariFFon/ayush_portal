@@ -34,6 +34,8 @@ import {
   SettingsIcon,
   SunIcon,
 } from "@/components/icons"
+import { BrandMark } from "@/components/brand-mark"
+import { openNotifications } from "@/components/notifications"
 import { CommandMenu } from "@/components/command-menu"
 import { OrgAvatar, STATUS_DOT } from "@/components/kit"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -93,18 +95,18 @@ function CompanyData({ children }: { children: React.ReactNode }) {
 }
 
 /* ── Styles ──────────────────────────────────────────────────────────────── */
-const LABEL = "px-3 pt-6 pb-2.5 text-[11px] font-medium tracking-[0.09em] text-muted-foreground uppercase group-data-[collapsible=icon]:hidden"
+const LABEL = "px-3 pt-6 pb-2.5 text-[12.5px] font-medium tracking-[0.09em] text-muted-foreground uppercase group-data-[collapsible=icon]:invisible"
 const ROW =
-  "group/row relative flex h-[3.25rem] w-full shrink-0 items-center gap-3.5 rounded-[20px] pr-3 pl-1.5 text-[15px] text-muted-foreground outline-none transition-[background-color,color,transform] duration-200 hover:bg-secondary/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.985] group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-14 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:rounded-2xl group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:hover:bg-transparent"
-const TILE =
-  "flex size-10 shrink-0 items-center justify-center rounded-[14px] transition-[background-color,color,box-shadow,transform] duration-200 group-data-[collapsible=icon]:size-12 [&_svg]:size-5"
-const TILE_OFF = "bg-secondary/80 text-muted-foreground group-hover/row:bg-secondary group-hover/row:text-foreground"
-const TILE_ON = "bg-primary text-primary-foreground shadow-[0_8px_16px_-8px_var(--glass-shadow)]"
+  "group/row relative flex h-[3.25rem] w-full shrink-0 items-center gap-3.5 rounded-[20px] border border-transparent pr-3 pl-4 text-[15.5px] text-muted-foreground outline-none transition-[background-color,color,transform] duration-200 hover:bg-secondary/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.985] group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:w-14 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:rounded-[20px] group-data-[collapsible=icon]:p-0"
+const TILE = "flex size-6 shrink-0 items-center justify-center transition-colors duration-200 [&_svg]:size-[22px]"
+const TILE_OFF = "text-muted-foreground group-hover/row:text-foreground"
+const TILE_ON = "text-foreground"
+const ROW_ACTIVE = "tone-lime tint dbl border border-transparent text-foreground [--r:20px] hover:bg-transparent"
 const TEXT = "truncate group-data-[collapsible=icon]:hidden"
 
 function Tile({ Icon, active, children }: { Icon: NavLink["icon"]; active: boolean; children?: React.ReactNode }) {
   return (
-    <span className={cn(TILE, active ? TILE_ON : TILE_OFF)}>
+    <span className={cn(TILE, "relative", active ? TILE_ON : TILE_OFF)}>
       <Icon />
       {children}
     </span>
@@ -120,18 +122,6 @@ function Meta({ children, tone }: { children: React.ReactNode; tone?: "alert" })
       )}
     >
       {children}
-    </span>
-  )
-}
-
-export function BrandMark({ className }: { className?: string }) {
-  return (
-    <span className={cn("flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ink text-lime", className)}>
-      <svg viewBox="0 0 24 24" className="size-[22px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 18h18" />
-        <path d="M5.5 18c0-5.2 2.9-9 6.5-9s6.5 3.8 6.5 9" />
-        <path d="M12 9V5" />
-      </svg>
     </span>
   )
 }
@@ -164,7 +154,7 @@ function SidebarView() {
             <BrandMark />
             <span className="leading-tight group-data-[collapsible=icon]:hidden">
               <span className="block text-[18px] font-semibold tracking-tight">CareerBridge</span>
-              <span className="block text-[11.5px] text-muted-foreground">Placement portal</span>
+              <span className="block text-[13px] text-muted-foreground">Placement portal</span>
             </span>
           </Link>
           {!isMobile && (
@@ -183,7 +173,7 @@ function SidebarView() {
           <button
             type="button"
             onClick={() => setCmdOpen(true)}
-            className="flex h-12 w-full shrink-0 items-center gap-3 rounded-[20px] border border-(--hairline) bg-card px-4 text-[15px] text-muted-foreground transition-[background-color,transform] duration-150 hover:bg-secondary active:scale-[0.985] group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-14 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:rounded-2xl group-data-[collapsible=icon]:px-0"
+            className="flex h-12 w-full shrink-0 items-center gap-3 rounded-[20px] border border-(--hairline) bg-card px-4 text-[15px] text-muted-foreground transition-[background-color,transform] duration-150 hover:bg-secondary active:scale-[0.985] group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:w-14 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:rounded-[20px] group-data-[collapsible=icon]:px-0"
           >
             <SearchIcon className="size-5 shrink-0" />
             <span className={cn(TEXT, "flex-1 text-left")}>Search</span>
@@ -193,19 +183,18 @@ function SidebarView() {
             </span>
           </button>
 
-          <div className="mx-3 my-4 hidden border-t border-border group-data-[collapsible=icon]:block" />
-          <p className={LABEL}>Main</p>
-          <nav className="flex flex-col gap-1.5 group-data-[collapsible=icon]:gap-2">
+                    <p className={LABEL}>Main</p>
+          <nav className="flex flex-col gap-1.5">
             {links.map((l) => (
               <NavRow key={l.href + l.label} link={l} pathname={pathname} collapsed={collapsed} meta={data.meta[l.href]} />
             ))}
             <button
               type="button"
               className={ROW}
-              onClick={() => toast.success("You're all caught up", { description: "No new notifications right now." })}
+              onClick={openNotifications}
             >
               <Tile Icon={BellIcon} active={false}>
-                <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-destructive ring-2 ring-sidebar" />
+                <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-destructive ring-2 ring-sidebar" />
               </Tile>
               <span className={TEXT}>Notifications</span>
             </button>
@@ -214,7 +203,7 @@ function SidebarView() {
           <RecentList collapsed={collapsed} />
         </SidebarContent>
 
-        <SidebarFooter className="shrink-0 p-4 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-4">
+        <SidebarFooter className="shrink-0 p-4 group-data-[collapsible=icon]:px-3.5 group-data-[collapsible=icon]:py-4">
           <UserCard collapsed={collapsed} />
         </SidebarFooter>
       </Sidebar>
@@ -231,7 +220,7 @@ function NavRow({ link, pathname, collapsed, meta }: { link: NavLink; pathname: 
 
   if (!link.children) {
     return (
-      <Link href={link.href} aria-current={active ? "page" : undefined} className={cn(ROW, active && "text-foreground")} title={collapsed ? link.label : undefined}>
+      <Link href={link.href} aria-current={active ? "page" : undefined} className={cn(ROW, active && ROW_ACTIVE)} title={collapsed ? link.label : undefined}>
         <Tile Icon={Icon} active={active} />
         <span className={cn(TEXT, active && "font-semibold")}>{link.label}</span>
         {meta !== undefined && <Meta>{meta}</Meta>}
@@ -242,7 +231,7 @@ function NavRow({ link, pathname, collapsed, meta }: { link: NavLink; pathname: 
   if (collapsed) {
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger render={<button type="button" aria-label={link.label} className={cn(ROW, active && "text-foreground")} />}>
+        <DropdownMenuTrigger render={<button type="button" aria-label={link.label} className={cn(ROW, active && ROW_ACTIVE)} />}>
           <Tile Icon={Icon} active={active} />
         </DropdownMenuTrigger>
         <DropdownMenuContent side="right" align="start" sideOffset={16} className="min-w-48">
@@ -258,7 +247,7 @@ function NavRow({ link, pathname, collapsed, meta }: { link: NavLink; pathname: 
 
   return (
     <div>
-      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className={cn(ROW, active && "text-foreground")}>
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className={cn(ROW, active && ROW_ACTIVE)}>
         <Tile Icon={Icon} active={active} />
         <span className={cn(TEXT, "flex-1 text-left", active && "font-semibold")}>{link.label}</span>
         {meta !== undefined && <Meta>{meta}</Meta>}
@@ -266,7 +255,7 @@ function NavRow({ link, pathname, collapsed, meta }: { link: NavLink; pathname: 
       </button>
       <div className={cn("grid transition-[grid-template-rows] duration-300 ease-(--ease-drawer)", open ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
         <ul className="overflow-hidden">
-          <div className="pt-1 pb-1.5 pl-[2.05rem]">
+          <div className="pt-1 pb-1.5 pl-[1.8rem]">
             {link.children.map((c) => {
               const on = isChildActive(pathname, c)
               return (
@@ -302,23 +291,23 @@ function RecentList({ collapsed }: { collapsed: boolean }) {
   return (
     <div className="mt-2">
       <div className="mx-1 mt-3 mb-1 border-t border-border group-data-[collapsible=icon]:mx-2" />
-      <div className="flex items-center justify-between group-data-[collapsible=icon]:hidden">
+      <div className="flex items-center justify-between group-data-[collapsible=icon]:invisible">
         <p className={LABEL}>Recent</p>
         <Link href={recentAdd} aria-label="Add" className="mt-4 mr-1 flex size-7 items-center justify-center rounded-full text-muted-foreground transition-[background-color,color,transform] duration-150 hover:bg-secondary hover:text-foreground active:scale-90">
           <PlusIcon className="size-5" />
         </Link>
       </div>
-      <ul className="flex flex-col gap-1 group-data-[collapsible=icon]:mt-3">
+      <ul className="flex flex-col gap-1">
         {recent.map((p) => (
           <li key={p.name}>
             <Link href={recentTo} title={collapsed ? p.name : undefined} className={cn(ROW, "h-[3.5rem]")}>
               <span className="relative shrink-0">
-                <OrgAvatar name={p.name} className="size-10 group-data-[collapsible=icon]:size-11" />
+                <OrgAvatar name={p.name} className="size-10" />
                 <span className={cn("absolute -right-0.5 -bottom-0.5 size-3 rounded-full ring-2 ring-sidebar", STATUS_DOT[p.status] ?? "bg-muted-foreground")} />
               </span>
               <span className={cn(TEXT, "flex-1 text-left leading-tight")}>
-                <span className="block truncate text-[14.5px] text-foreground">{p.name}</span>
-                <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">{p.sub}</span>
+                <span className="block truncate text-[16px] text-foreground">{p.name}</span>
+                <span className="mt-0.5 block truncate text-[13.5px] text-muted-foreground">{p.sub}</span>
               </span>
             </Link>
           </li>
@@ -346,11 +335,11 @@ function UserCard({ collapsed }: { collapsed: boolean }) {
   ]
 
   return (
-    <div className="flex items-center gap-1 rounded-[26px] border border-(--hairline) bg-card p-2 group-data-[collapsible=icon]:flex-col group-data-[collapsible=icon]:gap-1 group-data-[collapsible=icon]:rounded-[24px] group-data-[collapsible=icon]:p-1.5">
+    <div className="flex items-center gap-1 rounded-[26px] border border-(--hairline) bg-card p-2 group-data-[collapsible=icon]:relative group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:rounded-full">
       <Link
         href={profileHref}
         title="Open profile"
-        className="flex min-w-0 flex-1 items-center gap-3 rounded-[20px] p-1 text-left outline-none transition-[background-color,transform] duration-150 hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] group-data-[collapsible=icon]:flex-none group-data-[collapsible=icon]:p-0"
+        className="flex min-w-0 flex-1 items-center gap-3 rounded-[20px] p-1 text-left outline-none transition-[background-color,transform] duration-150 hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] group-data-[collapsible=icon]:flex-none group-data-[collapsible=icon]:pointer-events-none"
       >
         <Avatar className="size-11 shrink-0 rounded-2xl after:rounded-2xl">
           <AvatarImage src={user.profile_photo ?? ""} alt={name} className="rounded-2xl" />
@@ -365,7 +354,7 @@ function UserCard({ collapsed }: { collapsed: boolean }) {
       <DropdownMenu>
         <DropdownMenuTrigger
           aria-label="Account menu"
-          className="flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground outline-none transition-[background-color,color,transform] duration-150 hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:scale-90 aria-expanded:bg-secondary aria-expanded:text-foreground"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground outline-none group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:inset-0 group-data-[collapsible=icon]:size-full group-data-[collapsible=icon]:opacity-0 transition-[background-color,color,transform] duration-150 hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:scale-90 aria-expanded:bg-secondary aria-expanded:text-foreground"
         >
           <ChevronDownIcon className="size-4" />
         </DropdownMenuTrigger>

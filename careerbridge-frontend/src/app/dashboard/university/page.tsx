@@ -45,10 +45,10 @@ export default function UniversityDashboard() {
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile index={2} tone="sage" icon={<GraduateIcon />} title="Students" value={stats?.total_students ?? 0} caption="On the platform" />
-        <StatTile index={3} tone="blue" icon={<InternshipsIcon />} title="Internships" value={stats?.total_published_internships ?? 0} pill={{ text: "Live", variant: "lime" }} caption="Published now" />
-        <StatTile index={4} tone="violet" icon={<TrophyIcon />} title="Placements" value={stats?.total_placements ?? 0} caption="Students selected" />
-        <StatTile index={5} tone="mist" icon={<BuildingsIcon />} title="Companies" value={stats?.verified_companies ?? 0} caption="Verified recruiters" />
+        <StatTile index={2} tone="blue" icon={<GraduateIcon />} title="Students" value={stats?.total_students ?? 0} caption="On the platform" />
+        <StatTile index={3} tone="amber" icon={<InternshipsIcon />} title="Internships" value={stats?.total_published_internships ?? 0} pill={{ text: "Live", variant: "lime" }} caption="Published now" />
+        <StatTile index={4} tone="mint" icon={<TrophyIcon />} title="Placements" value={stats?.total_placements ?? 0} caption="Students selected" />
+        <StatTile index={5} tone="violet" icon={<BuildingsIcon />} title="Companies" value={stats?.verified_companies ?? 0} caption="Verified recruiters" />
       </div>
 
       <Panel title="Placement snapshot" style={stagger(6)} contentClassName="grid items-center gap-8 md:grid-cols-[1fr_auto]">

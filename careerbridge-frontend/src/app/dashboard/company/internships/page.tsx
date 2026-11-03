@@ -91,10 +91,10 @@ export default function CompanyInternshipsPage() {
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile index={2} tone="sage" icon={<CheckCircleIcon />} title="Live" value={live} caption="Accepting applications" />
-        <StatTile index={3} tone="blue" icon={<PenIcon />} title="Drafts" value={drafts} caption="Not published yet" />
-        <StatTile index={4} tone="mist" icon={<CloseCircleIcon />} title="Closed" value={closed} caption="No longer open" />
-        <StatTile index={5} tone="violet" icon={<InternshipsIcon />} title="Open positions" value={openings} caption="Across live listings" />
+        <StatTile index={2} tone="mint" icon={<CheckCircleIcon />} title="Live" value={live} caption="Accepting applications" />
+        <StatTile index={3} tone="amber" icon={<PenIcon />} title="Drafts" value={drafts} caption="Not published yet" />
+        <StatTile index={4} tone="pink" icon={<CloseCircleIcon />} title="Closed" value={closed} caption="No longer open" />
+        <StatTile index={5} tone="blue" icon={<InternshipsIcon />} title="Open positions" value={openings} caption="Across live listings" />
       </div>
 
       <Panel title={`All listings · ${items.length}`} style={stagger(6)}>
@@ -109,11 +109,11 @@ export default function CompanyInternshipsPage() {
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="h-9 text-xs font-medium text-muted-foreground">Role</TableHead>
-                <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground md:table-cell">Location</TableHead>
-                <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground sm:table-cell">Stipend</TableHead>
-                <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground lg:table-cell">Deadline</TableHead>
-                <TableHead className="h-9 text-right text-xs font-medium text-muted-foreground">Status</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead className="hidden md:table-cell">Location</TableHead>
+                <TableHead className="hidden sm:table-cell">Stipend</TableHead>
+                <TableHead className="hidden lg:table-cell">Deadline</TableHead>
+                <TableHead className="text-right">Status</TableHead>
                 <TableHead className="w-28" />
               </TableRow>
             </TableHeader>

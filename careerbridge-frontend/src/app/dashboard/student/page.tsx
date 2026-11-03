@@ -17,7 +17,6 @@ import {
   OrgAvatar,
   GreetingHeader,
   Panel,
-  Funnel,
   StatTile,
   StatusBadge,
   TaskList,
@@ -120,26 +119,26 @@ export default function StudentDashboard() {
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile index={2} tone="sage" icon={<ApplicationsIcon />} title="Applications" value={total} pill={{ text: stats?.applied ? `${stats.applied} new` : "None new", variant: "lime" }} caption="Across all internships" />
-        <StatTile index={3} tone="blue" icon={<StarIcon />} title="Shortlisted" value={stats?.shortlisted ?? 0} caption="Recruiters are interested" />
-        <StatTile index={4} tone="violet" icon={<TrophyIcon />} title="Selected" value={selected} caption="Offers received" />
-        <StatTile index={5} tone="mist" icon={<SkillsIcon />} title="Skills" value={skills} href="/dashboard/student/skills" caption="Used for match scores" />
+        <StatTile index={2} tone="blue" icon={<ApplicationsIcon />} title="Applications" value={total} pill={{ text: stats?.applied ? `${stats.applied} new` : "None new", variant: "lime" }} caption="Across all internships" />
+        <StatTile index={3} tone="violet" icon={<StarIcon />} title="Shortlisted" value={stats?.shortlisted ?? 0} caption="Recruiters are interested" />
+        <StatTile index={4} tone="mint" icon={<TrophyIcon />} title="Selected" value={selected} caption="Offers received" />
+        <StatTile index={5} tone="amber" icon={<SkillsIcon />} title="Skills" value={skills} href="/dashboard/student/skills" caption="Used for match scores" />
       </div>
 
       {now > 0 && (
-        <div className="grid items-start gap-5 lg:grid-cols-12">
+        <div className="grid items-stretch gap-5 lg:grid-cols-12">
           <RecommendedJobs className="lg:col-span-7" jobs={jobs} isDemo={jobsDemo} />
           <ClosingSoon className="lg:col-span-5" jobs={jobs} now={now} />
         </div>
       )}
 
-      <div className="grid items-start gap-5 lg:grid-cols-12">
-        <div className="min-w-0 lg:col-span-8">
+      <div className="grid items-stretch gap-5 lg:grid-cols-12">
+        <div className="flex min-w-0 flex-col lg:col-span-8 [&>*]:flex-1">
           <Panel
             title="Recent applications"
             style={stagger(6)}
             action={
-              <Link href="/dashboard/student/applications" className="text-[14px] font-medium underline-offset-4 hover:underline">
+              <Link href="/dashboard/student/applications" className="text-[16px] font-medium underline-offset-4 hover:underline">
                 View all
               </Link>
             }
@@ -162,10 +161,10 @@ export default function StudentDashboard() {
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="h-9 text-xs font-medium text-muted-foreground">Company</TableHead>
-                    <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground sm:table-cell">Role</TableHead>
-                    <TableHead className="hidden h-9 text-xs font-medium text-muted-foreground md:table-cell">Applied</TableHead>
-                    <TableHead className="h-9 text-right text-xs font-medium text-muted-foreground">Status</TableHead>
+                    <TableHead>Company</TableHead>
+                    <TableHead className="hidden sm:table-cell">Role</TableHead>
+                    <TableHead className="hidden md:table-cell">Applied</TableHead>
+                    <TableHead className="text-right">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -192,22 +191,15 @@ export default function StudentDashboard() {
           </Panel>
         </div>
 
-        <div className="min-w-0 space-y-5 lg:col-span-4">
+        <div className="flex min-w-0 flex-col lg:col-span-4 [&>*]:flex-1">
           <Panel title="Next steps" style={stagger(7)}>
             <TaskList items={tasks} highlight={nextTask} />
-          </Panel>
-          <Panel title="Funnel" style={stagger(8)}>
-            <Funnel stages={[
-              { label: "Applied", value: total, color: "var(--c-sky)" },
-              { label: "Shortlisted", value: stats?.shortlisted ?? 0, color: "var(--c-violet)" },
-              { label: "Selected", value: selected, color: "var(--c-mint)" },
-            ]} />
           </Panel>
         </div>
       </div>
 
       {now > 0 && (
-        <div className="grid items-start gap-5 lg:grid-cols-12">
+        <div className="grid items-stretch gap-5 lg:grid-cols-12">
           <ActivityFeed className={isDemo ? "lg:col-span-4" : "lg:col-span-7"} items={activity} now={now} />
           {isDemo ? (
             <>
